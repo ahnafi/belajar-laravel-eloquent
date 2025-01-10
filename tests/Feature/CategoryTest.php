@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Category;
+use Database\Seeders\CategorySeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\DB;
@@ -47,6 +48,21 @@ class CategoryTest extends TestCase
         $total = Category::query()->count();
 //        $total = Category::count();
         self::assertEquals(10, $total);
+
+    }
+
+    function testFind()
+    {
+        $this->seed(CategorySeeder::class);
+
+        $category = Category::query()->find("FOOD");
+
+        var_dump($category);
+
+        self::assertNotNull($category);
+        self::assertEquals("FOOD", $category->id);
+        self::assertEquals("Food", $category->name);
+        self::assertEquals("Food Category", $category->description);
 
     }
 }
