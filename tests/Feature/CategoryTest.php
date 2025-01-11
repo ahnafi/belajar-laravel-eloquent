@@ -97,10 +97,39 @@ class CategoryTest extends TestCase
             self::assertNotNull($collection[$i]);
         }
 
-        $collection->each(function ($params){
-           $params->description = "Update Description";
-           $params->update();
+        $collection->each(function ($params) {
+            $params->description = "Update Description";
+            $params->update();
         });
+
+    }
+
+    function testUpdateMany()
+    {
+        $categories = [];
+        for ($i = 0; $i < 10; $i++) {
+            $categories[] = [
+
+                "id" => "ID $i",
+
+                "name" => "name $i"
+            ];
+        }
+
+        self::assertTrue(Category::query()->insert($categories));
+
+//        $collection->each(function ($params){
+//           $params->description = "Update Description";
+//           $params->update();
+//        });
+
+        Category::query()->whereNull("description")->update([
+            "description" => "updated"
+        ]);
+
+        $collection = Category::query()->where("description", "updated")->get();
+
+        self::assertCount(10, $collection);
 
     }
 }
