@@ -4,10 +4,12 @@ namespace Tests\Feature;
 
 use App\Models\Category;
 use Database\Seeders\CategorySeeder;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
+use function PHPUnit\Framework\assertNotNull;
 
 class CategoryTest extends TestCase
 {
@@ -76,6 +78,29 @@ class CategoryTest extends TestCase
         $result = $category->update();
 
         self::assertTrue($result);
+
+    }
+
+    function testSelect()
+    {
+        for ($i = 0; $i < 10; $i++) {
+            $category = new Category();
+            $category->id = "ID $i";
+            $category->name = "name $i";
+
+            $category->save();
+        }
+
+        $collection = Category::query()->whereNull("description")->get();
+        self::assertCount(10, $collection);
+        for ($i = 0; $i < count($collection); $i++) {
+            self::assertNotNull($collection[$i]);
+        }
+
+        $collection->each(function ($params){
+           $params->description = "Update Description";
+           $params->update();
+        });
 
     }
 }
