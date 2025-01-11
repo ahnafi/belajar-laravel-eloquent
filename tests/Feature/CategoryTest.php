@@ -132,4 +132,42 @@ class CategoryTest extends TestCase
         self::assertCount(10, $collection);
 
     }
+
+    function testDelete()
+    {
+        $this->seed(CategorySeeder::class);
+
+        $category = Category::query()->find("FOOD");
+        $result = $category->delete();
+
+        self::assertTrue($result);
+
+        $total = Category::query()->get();
+        self::assertCount(0, $total);
+    }
+
+    function testDeleteMany()
+    {
+        $categories = [];
+        for ($i = 0; $i < 10; $i++) {
+            $categories[] = [
+
+                "id" => "ID $i",
+
+                "name" => "name $i"
+            ];
+        }
+
+        $result = Category::query()->insert($categories);
+        self::assertTrue($result);
+
+        $total = Category::query()->whereNull("description")->get();
+        self::assertCount(10, $total);
+
+        Category::query()->whereNull("description")->delete();
+
+        $total = Category::query()->get();
+        self::assertCount(0, $total);
+
+    }
 }
