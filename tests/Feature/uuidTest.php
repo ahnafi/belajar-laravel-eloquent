@@ -18,7 +18,7 @@ class uuidTest extends TestCase
 
     function testCreateVoucher()
     {
-        $voucher = new voucher();
+        $voucher = new Voucher();
         $voucher->name = "sample voucher ";
         $voucher->voucher_code = "12231231231";
         $voucher->save();
@@ -29,7 +29,7 @@ class uuidTest extends TestCase
 
     function testCreateVoucherUUID()
     {
-        $voucher = new voucher();
+        $voucher = new Voucher();
         $voucher->name = "sample voucher ";
         $voucher->save();
 
