@@ -20,7 +20,7 @@ class VoucherTest extends TestCase
         $voucher = Voucher::query()->where("name", "=", "Sample voucher")->first();
         self::assertNull($voucher);
 
-//        Voucher::withTrashed()->forceDelete();
+        Voucher::withTrashed()->forceDelete();
 
         $data = Voucher::withTrashed()->get();
         self::assertNotNull($data);

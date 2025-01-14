@@ -3,11 +3,13 @@
 namespace Tests\Feature;
 
 use App\Models\Category;
+use App\Models\Scopes\IsActiveScope;
 use Database\Seeders\CategorySeeder;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
 use function PHPUnit\Framework\assertNotNull;
 
@@ -214,6 +216,38 @@ class CategoryTest extends TestCase
         $category->save();
 
         self::assertNotNull($category->id);
+
+    }
+
+    function testRemoveGlobalScope()
+    {
+        $category = new Category();
+        $category->id = "FOOD";
+        $category->name = "Food";
+        $category->description = "Food Category";
+        $category->is_active = false;
+
+        $category->save();
+
+        $category = new Category();
+        $category->id = "Tools";
+        $category->name = "tools";
+        $category->description = "Tools Category";
+        $category->is_active = true;
+
+        $category->save();
+
+        $category = Category::query()->find("FOOD");
+        self::assertNull($category);
+
+        $category = Category::query()->get();
+        self::assertCount(1, $category);
+        foreach ($category as $item) {
+            self::assertEquals("Tools", $item->id);
+        }
+
+        $category = Category::query()->withoutGlobalScopes([IsActiveScope::class])->get();
+        self::assertCount(2, $category);
 
     }
 }
