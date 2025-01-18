@@ -5,14 +5,17 @@ namespace Tests\Feature;
 use App\Models\Category;
 use App\Models\Customer;
 use App\Models\Product;
+use App\Models\VirtualAccount;
 use App\Models\Wallet;
 use Database\Seeders\CategorySeeder;
 use Database\Seeders\CustomerSeeder;
 use Database\Seeders\ProductSeeder;
+use Database\Seeders\VirtualAccountSeeder;
 use Database\Seeders\WalletSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
+use function PHPUnit\Framework\assertNotNull;
 
 class relationshipTest extends TestCase
 {
@@ -20,6 +23,7 @@ class relationshipTest extends TestCase
     function setUp(): void
     {
         parent::setUp();
+        VirtualAccount::query()->delete();
         Wallet::query()->delete();
         Customer::query()->delete();
         Product::query()->delete();
@@ -116,5 +120,17 @@ class relationshipTest extends TestCase
         $mostExpensiveProduct = $category->mostExpensiveProduct;
         self::assertNotNull($mostExpensiveProduct);
         self::assertEquals(1000000, $mostExpensiveProduct->price);
+    }
+
+    function testHasOneThrough()
+    {
+        $this->seed([CustomerSeeder::class, WalletSeeder::class, VirtualAccountSeeder::class]);
+
+        $customer = Customer::query()->find("budi");
+        self::assertNotNull($customer);
+
+        $va = $customer->virtualAccount;
+        self::assertNotNull($va);
+        self::assertEquals('BCA', $va->bank);
     }
 }
