@@ -3,10 +3,12 @@
 namespace App\Models;
 
 use App\Models\Scopes\IsActiveScope;
+use Database\Seeders\ProductSeeder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Category extends Model
 {
@@ -31,6 +33,16 @@ class Category extends Model
     public function products(): HasMany
     {
         return $this->HasMany(Product::class, "category_id", "id");
+    }
+
+    public function cheapestProduct(): HasOne
+    {
+        return $this->hasOne(Product::class, "category_id", "id")->oldest("price");
+    }
+
+    function mostExpensiveProduct(): HasOne
+    {
+        return $this->hasOne(Product::class, "category_id", "id")->latest("price");
     }
 
 }

@@ -98,9 +98,23 @@ class relationshipTest extends TestCase
 
         $category = Category::query()->find("FOOD");
 
-        $outOfStockProduct = $category->products()->where("stock",'<=',"0")->get();
+        $outOfStockProduct = $category->products()->where("stock", '<=', "0")->get();
         self::assertNotNull($outOfStockProduct);
-        self::assertCount(1,$outOfStockProduct);
+        self::assertCount(1, $outOfStockProduct);
 
+    }
+
+    function testHasOneOFMany()
+    {
+        $this->seed([CategorySeeder::class, ProductSeeder::class]);
+
+        $category = Category::query()->find('FOOD');
+        $cheapestProduct = $category->cheapestProduct;
+        self::assertNotNull($cheapestProduct);
+        self::assertEquals(200, $cheapestProduct->price);
+
+        $mostExpensiveProduct = $category->mostExpensiveProduct;
+        self::assertNotNull($mostExpensiveProduct);
+        self::assertEquals(1000000, $mostExpensiveProduct->price);
     }
 }
