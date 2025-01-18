@@ -58,4 +58,49 @@ class relationshipTest extends TestCase
         self::assertCount(1, $relProduct);
 
     }
+
+    function testInsertRelationshipOneToOne()
+    {
+        $customer = new Customer();
+        $customer->id = "BUDI";
+        $customer->name = "budi";
+        $customer->email = "budi@gmail.com";
+        $customer->save();
+
+        self::assertNotNull($customer);
+
+        $wallet = new Wallet();
+        $wallet->amount = 1000000;
+
+        $customer->wallet()->save($wallet);
+
+        self::assertNotNull($customer->wallet);
+    }
+
+    function testInsertRelationshipOneToMany()
+    {
+        $category = new Category();
+        $category->id = "FOOD";
+        $category->name = "Food";
+        $category->description = "Food Category";
+        $category->is_active = true;
+        $category->save();
+
+        $product = new Product();
+        $product->id = "1";
+        $product->name = "Product 1";
+        $product->description = "Product 1 description";
+        $product->category_id = "FOOD";
+        $category->products()->save($product);
+
+//        $data = Product::find("1");
+//        self::assertNotNull($data);
+
+        $category = Category::query()->find("FOOD");
+
+        $outOfStockProduct = $category->products()->where("stock",'<=',"0")->get();
+        self::assertNotNull($outOfStockProduct);
+        self::assertCount(1,$outOfStockProduct);
+
+    }
 }
