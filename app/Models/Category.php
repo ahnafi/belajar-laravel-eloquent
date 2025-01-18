@@ -5,6 +5,8 @@ namespace App\Models;
 use App\Models\Scopes\IsActiveScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Category extends Model
 {
@@ -20,10 +22,15 @@ class Category extends Model
         'description'
     ];
 
-    protected static function booted ()
+    protected static function booted()
     {
         parent::booted();
         self::addGlobalScope(new IsActiveScope());
+    }
+
+    public function products(): HasMany
+    {
+        return $this->HasMany(Product::class, "category_id", "id");
     }
 
 }
