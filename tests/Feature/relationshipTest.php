@@ -8,6 +8,7 @@ use App\Models\Product;
 use App\Models\Review;
 use App\Models\VirtualAccount;
 use App\Models\Wallet;
+use Cassandra\Custom;
 use Database\Seeders\CategorySeeder;
 use Database\Seeders\CustomerSeeder;
 use Database\Seeders\ProductSeeder;
@@ -185,6 +186,42 @@ class relationshipTest extends TestCase
 
         self::assertNotNull($products);
         self::assertCount(0, $products);
+    }
+
+    public function testPivotAttribute()
+    {
+        $this->testInsertManyToMany();
+
+        $customer = Customer::find("budi");
+        $products = $customer->likeProducts;
+
+        foreach ($products as $product) {
+            $pivot = $product->pivot;
+            Log::info($pivot);
+            self::assertNotNull($pivot);
+            self::assertNotNull($pivot->created_at);
+            self::assertNotNull($pivot->customer_id);
+            self::assertNotNull($pivot->product_id);
+        }
+    }
+
+    public function testPivotAttributeCondition()
+    {
+        $this->testInsertManyToMany();
+
+
+        $customer = Customer::find("budi");
+        $products = $customer->likeProductsLastWeek;
+
+        foreach ($products as $product) {
+            $pivot = $product->pivot;
+            Log::info($pivot);
+            self::assertNotNull($pivot);
+            self::assertNotNull($pivot->created_at);
+            self::assertNotNull($pivot->customer_id);
+            self::assertNotNull($pivot->product_id);
+        }
+
     }
 
 }
