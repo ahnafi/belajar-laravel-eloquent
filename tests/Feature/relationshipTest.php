@@ -16,6 +16,8 @@ use Database\Seeders\VirtualAccountSeeder;
 use Database\Seeders\WalletSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
 use function PHPUnit\Framework\assertNotNull;
 
@@ -27,6 +29,8 @@ class relationshipTest extends TestCase
         parent::setUp();
         VirtualAccount::query()->delete();
         Wallet::query()->delete();
+        DB::delete('delete from customers_likes_products');
+        Review::query()->delete();
         Customer::query()->delete();
         Product::query()->delete();
         Category::query()->forceDelete();
@@ -61,7 +65,7 @@ class relationshipTest extends TestCase
 
         $relProduct = $category->products;
         self::assertNotNull($relProduct);
-        self::assertCount(1, $relProduct);
+        self::assertCount(2, $relProduct);
 
     }
 
@@ -147,4 +151,40 @@ class relationshipTest extends TestCase
         self::assertNotNull($reviews);
         self::assertCount(2, $reviews);
     }
+
+    public function testInsertManyToMany()
+    {
+        $this->seed([CategorySeeder::class, ProductSeeder::class, CustomerSeeder::class]);
+
+        $customer = Customer::query()->find('budi');
+        $customer->likeProducts()->attach('1');
+
+        self::assertNotNull($customer->id);
+    }
+
+    public function testQueryManyToMany()
+    {
+        $this->testInsertManyToMany();
+
+        $customer = Customer::query()->find("budi");
+        $products = $customer->likeProducts;
+        self::assertNotNull($products);
+
+        self::assertEquals('1', $products[0]->id);
+        self::assertEquals('Product 1', $products[0]->name);
+
+    }
+
+    public function testRemoveManyToMany()
+    {
+        $this->testInsertManyToMany();
+
+        $customer = Customer::query()->find('budi');
+        $customer->likeProducts()->detach("1");
+        $products = $customer->likeProducts;
+
+        self::assertNotNull($products);
+        self::assertCount(0, $products);
+    }
+
 }
