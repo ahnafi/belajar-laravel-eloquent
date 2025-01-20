@@ -224,4 +224,24 @@ class relationshipTest extends TestCase
 
     }
 
+    function testPivotModel()
+    {
+        $this->testInsertManyToMany();
+
+        $customer = Customer::find("budi");
+        $products = $customer->likeProducts;
+
+        foreach ($products as $product) {
+            $pivot = $product->pivot;
+            self::assertNotNull($pivot);
+
+            $product = $pivot->product;
+            self::assertNotNull($product);
+
+            $customer = $pivot->customer;
+            self::assertNotNull($customer);
+        }
+
+    }
+
 }

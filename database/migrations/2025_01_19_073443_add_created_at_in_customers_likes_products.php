@@ -21,7 +21,7 @@ return new class extends Migration {
     public function down(): void
     {
         Schema::table('customers_likes_products', function (Blueprint $table) {
-            //
+            $table->timestamp("created_at");
         });
     }
 };
