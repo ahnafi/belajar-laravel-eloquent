@@ -54,4 +54,19 @@ class PolymorphicTest extends TestCase
 
 
     }
+
+    function testOneOfManyPolymorphic()
+    {
+        $this->seed([CategorySeeder::class, ProductSeeder::class, VoucherSeeder::class, CommentSeeder::class]);
+
+        $product = Product::first();
+
+        $latestComment = $product->latestComment;
+        self::assertNotNull($latestComment);
+
+        $oldestComment = $product->oldestComment;
+        self::assertNotNull($oldestComment);
+
+        Log::info(json_encode(['latest' => $latestComment, 'oldest' => $oldestComment], JSON_PRETTY_PRINT));
+    }
 }
