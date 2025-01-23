@@ -48,7 +48,7 @@ class PolymorphicTest extends TestCase
 
         self::assertCount(1, $comments);
         foreach ($comments as $comment) {
-            self::assertEquals(Product::class, $comment->commentable_type);
+            self::assertEquals('product', $comment->commentable_type);
             self::assertEquals($product->id, $comment->commentable_id);
             Log::info($comment);
         }

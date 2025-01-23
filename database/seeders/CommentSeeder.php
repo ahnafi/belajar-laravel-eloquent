@@ -24,7 +24,7 @@ class CommentSeeder extends Seeder
         $comment->comment = "bagus banget produknya";
 
         $comment->commentable_id = $product->id;
-        $comment->commentable_type = Product::class;
+        $comment->commentable_type = 'product';
         $comment->save();
 
         $voucher = Voucher::query()->first();
@@ -35,7 +35,7 @@ class CommentSeeder extends Seeder
         $comment2->comment = "ini gimana cara pakai voucher";
 
         $comment2->commentable_id = $voucher->id;
-        $comment2->commentable_type = Voucher::class;
+        $comment2->commentable_type = 'voucher';
         $comment2->save();
     }
 }
