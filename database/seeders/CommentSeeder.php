@@ -18,14 +18,16 @@ class CommentSeeder extends Seeder
 
         $product = Product::find('1');
 
-        $comment = new Comment();
-        $comment->email = "budi@gmail.com";
-        $comment->title = "budi";
-        $comment->comment = "bagus banget produknya";
+        for ($i = 0; $i < 5; $i++) {
+            $comment = new Comment();
+            $comment->email = "budi@gmail.com";
+            $comment->title = "budi";
+            $comment->comment = "komentar ke $i";
 
-        $comment->commentable_id = $product->id;
-        $comment->commentable_type = 'product';
-        $comment->save();
+            $comment->commentable_id = $product->id;
+            $comment->commentable_type = 'product';
+            $comment->save();
+        }
 
         $voucher = Voucher::query()->first();
 
