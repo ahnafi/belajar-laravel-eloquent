@@ -9,6 +9,12 @@ use Tests\TestCase;
 
 class PersonTest extends TestCase
 {
+    public function setUp(): void
+    {
+        parent::setUp();
+        Person::query()->delete();
+    }
+
     function testPerson()
     {
         $person = new Person();
@@ -23,5 +29,18 @@ class PersonTest extends TestCase
 
         self::assertEquals("JOKO", $person->first_name);
         self::assertEquals("Moro", $person->last_name);
+    }
+
+    public function testAttributeCasting()
+    {
+        $person = new Person();
+        $person->first_name = "budiono";
+        $person->last_name = "siregar";
+        $person->save();
+
+        self::assertNotNull($person->created_at);
+        self::assertNotNull($person->updated_at);
+        self::assertInstanceOf(\Carbon\Carbon::class, $person->updated_at);
+        self::assertInstanceOf(\Carbon\Carbon::class, $person->created_at);
     }
 }

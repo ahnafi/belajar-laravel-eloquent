@@ -43,4 +43,9 @@ class Person extends Model
             ];
         });
     }
+
+    protected $casts = [
+        "created_at" => "datetime",
+        "updated_at" => "datetime"
+    ];
 }
