@@ -107,4 +107,14 @@ class PolymorphicTest extends TestCase
         self::assertEquals(2, $products);
     }
 
+    public function testEloquentCollection()
+    {
+        $this->seed([CategorySeeder::class, ProductSeeder::class]);
+        $products = Product::get();
+        self::assertCount(2, $products);
+
+        $products = $products->toQuery()->where("price", 200)->get();
+        self::assertCount(1, $products);
+    }
+
 }
