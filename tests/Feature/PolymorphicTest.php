@@ -88,4 +88,13 @@ class PolymorphicTest extends TestCase
             Log::info(json_encode($tag, JSON_PRETTY_PRINT));
         }
     }
+
+    public function testQueryingRelations()
+    {
+        $this->seed([CategorySeeder::class, ProductSeeder::class]);
+
+        $category = Category::find("FOOD");
+        $product = $category->products()->where("price", 200)->get();
+        self::assertCount(1, $product);
+    }
 }
