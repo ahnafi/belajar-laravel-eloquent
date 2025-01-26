@@ -97,4 +97,14 @@ class PolymorphicTest extends TestCase
         $product = $category->products()->where("price", 200)->get();
         self::assertCount(1, $product);
     }
+
+    public function testQueryingRelationsAggregate()
+    {
+        $this->seed([CategorySeeder::class, ProductSeeder::class]);
+
+        $category = Category::find("FOOD");
+        $products = $category->products()->count();
+        self::assertEquals(2, $products);
+    }
+
 }
