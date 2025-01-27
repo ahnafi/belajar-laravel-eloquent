@@ -22,6 +22,10 @@ class Product extends Model
     public $incrementing = false;
     public $timestamps = false;
 
+    protected $hidden = [
+        "category_id"
+    ];
+
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class, "category_id", "id");
@@ -61,8 +65,8 @@ class Product extends Model
             ->oldest('created_at');
     }
 
-    public function tags():MorphToMany
+    public function tags(): MorphToMany
     {
-        return $this->morphToMany(Tag::class,'taggable');
+        return $this->morphToMany(Tag::class, 'taggable');
     }
 }

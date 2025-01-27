@@ -19,6 +19,10 @@ class Category extends Model
     public $incrementing = false;
     public $timestamps = false;
 
+    protected $casts = [
+        "created_at" => "datetime:U"
+    ];
+
     protected $fillable = [
         'id',
         'name',
